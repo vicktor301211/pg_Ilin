@@ -1,7 +1,5 @@
 import random
-
 import all_colors
-from all_colors import *
 import pygame
 pygame.init()
 music = ['resourse/Disco_music_1.mp3', 'resourse/Disco_music_2.mp3']
@@ -28,12 +26,13 @@ while running:
     #Отрисовка объектов
     rand_index = random.choice(COLOR)
     screen.fill(rand_index)
-    for i in range(25):
+    random_kol = random.randrange(1, 100)
+    for i in range(random_kol):
         rand_color = random.choice(COLOR)
-        rand_x = random.randint(10, 1590)
-        rand_y = random.randint(10, 900)
+        rand_x = random.randint(0, 1600)
+        rand_y = random.randint(0, 900)
         rand_radius = random.randint(20, 200)
         pygame.draw.ellipse(screen, rand_color, (rand_x, rand_y, rand_radius, rand_radius))
     pygame.display.flip()
-    pygame.time.delay(random.randint(200, 800))
+    pygame.time.delay(random.randint(100, 700))
 pygame.quit()
