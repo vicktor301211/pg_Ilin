@@ -28,17 +28,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.1_1_discoteca.executor": "Run",
-    "Python.1_2_примитивы.executor": "Run",
-    "Python.1_3_исскуство_и_дискач.executor": "Run",
-    "Python.каркас.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/Я/Documents/pg_Ilin/resourse"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.1_1_discoteca.executor&quot;: &quot;Run&quot;,
+    &quot;Python.1_2_примитивы.executor&quot;: &quot;Run&quot;,
+    &quot;Python.1_3_исскуство_и_дискач.executor&quot;: &quot;Run&quot;,
+    &quot;Python.каркас.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Я/Documents/pg_Ilin/resourse&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Я\Documents\pg_Ilin\resourse" />
