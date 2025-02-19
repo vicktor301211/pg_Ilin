@@ -12,18 +12,14 @@ screen.fill(BACKGROUND)
 
 x, y = 0, 0
 rect_size = 200
-colors = [RED, BLACK]
+colors = COLORS
+rects = []
 
-for i in range(1 ,3):
-    rect = pygame.Rect(x, y, rect_size//i, rect_size//i)
+for i in range(1 ,13):
+    rect = pygame.Rect(x, y, rect_size-20*i, rect_size-20*i)
     rect.center = (screen.get_width()//2, screen.get_height()/2)
-    pygame.draw.rect(screen, colors[i-1], rect)
-# rect1 = pygame.Rect(x, y, rect_size, rect_size)
-# rect1.center = (screen.get_width()//2, screen.get_height()//2)
-# pygame.draw.rect(screen, BLACK, rect1)
-# rect2 = pygame.Rect(x, y, rect_size//2, rect_size//2)
-# rect2.center = (screen.get_width()//2, screen.get_height()//2)
-# pygame.draw.rect(screen, RED, rect2)
+    rects.append(rect)
+
 
 speed = 5
 
@@ -66,6 +62,8 @@ while running:
     #     continue
 
     #Отрисовка объектов
+    for rect in rects:
+        pygame.draw.rect(screen, choice(colors), rect, 20)
 
     pygame.display.flip()
     clock.tick(FPS)
