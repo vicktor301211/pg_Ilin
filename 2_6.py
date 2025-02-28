@@ -63,7 +63,7 @@ while running:
 
     #Отрисовка объектов
     for rect in rects:
-        pygame.draw.rect(screen, choice(colors), rect, 20)
+        pygame.draw.rect(screen, choice(colors), rect, 20, border_radius=10)
 
     pygame.display.flip()
     clock.tick(FPS)
