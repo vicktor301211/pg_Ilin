@@ -15,8 +15,8 @@ rect_size = 200
 colors = COLORS
 rects = []
 
-for i in range(1 ,13):
-    rect = pygame.Rect(x, y, rect_size-20*i, rect_size-20*i)
+for i in range(1 ,20):
+    rect = pygame.Rect(x, y, rect_size-10*i, rect_size-10*i)
     rect.center = (screen.get_width()//2, screen.get_height()/2)
     rects.append(rect)
 
@@ -63,7 +63,7 @@ while running:
 
     #Отрисовка объектов
     for rect in rects:
-        pygame.draw.rect(screen, choice(colors), rect, 20, border_radius=10)
+        pygame.draw.rect(screen, choice(colors), rect, 10)
 
     pygame.display.flip()
     clock.tick(FPS)
