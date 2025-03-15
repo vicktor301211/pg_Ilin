@@ -58,6 +58,7 @@ while running:
                     missiles[current_missile_index]['launched'] = True
                     missiles[current_missile_index]['speed_x'] = 3
                     shot_sound.play()
+                    print(f'Снаряды: {missiles_counter-1}, Здоровье корабля: {hp_ship}')
                     # Переход к следующему снаряду
                     current_missile_index = (current_missile_index + 1) // missiles_counter
 
@@ -84,6 +85,7 @@ while running:
                 missiles.remove(missile)
                 missiles_counter -= 1       # Уничтожаем снаряд после попадания
                 explosion_sound.play()
+                print(f'Снаряды: {missiles_counter}, Здоровье корабля: {hp_ship}')
                 if hp_ship <= 0:
                     ship_alive = False
                     pygame.mixer.music.stop()
