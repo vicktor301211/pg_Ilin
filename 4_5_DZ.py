@@ -48,7 +48,7 @@ while running:
     elif keys[pg.K_DOWN] and plane_2_rect.bottom < screen_height + 150:
         plane_2_rect.y += 5
     elif keys[pg.K_x]:
-        pg.quit()
+        exit()
 
     screen.blit(plane_1_image, plane_1_rect)
     screen.blit(plane_2_image, plane_2_rect)
