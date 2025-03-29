@@ -1,6 +1,7 @@
 import sys
 from random import *
 from all_colors import *
+import pygame.mixer
 import pygame
 pygame.init()
 
@@ -22,15 +23,16 @@ SCR_HEIGHT = 720
 screen = pygame.display.set_mode([SCR_WIDTH, SCR_HEIGHT])
 pygame.display.set_caption("Пинг-понг")
 
-directs = [-5, 5]
+
 
 PADDLE_WIDTH = 25
 PADDLE_HEIGHT = 100
 PADDLE_SPEED = 10
 
+BALL_SPEED = 5
 BALL_SIZE = 15
-BALL_SPEED_X = 5
-BALL_SPEED_Y = 5
+BALL_SPEED_X = BALL_SPEED
+BALL_SPEED_Y = BALL_SPEED
 
 screen_rect = pygame.Rect(0, 0, SCR_WIDTH, SCR_HEIGHT)
 
@@ -48,7 +50,8 @@ score_1 = 0
 score_2 = 0
 font = pygame.font.SysFont(None, 32)
 
-
+hit_sound = pygame.mixer.Sound('resourse/hit.wav')
+miss_sound = pygame.mixer.Sound('resourse/miss.wav')
 
 BACKGROUND = BLACK
 screen.fill(BACKGROUND)
@@ -101,22 +104,36 @@ while running:
     # Если поверхность мяча столкнулась с поверхностью первой ракетки или поверхность мяча столкнулась с поверхностью второй ракетки: скорость мяча по оси x умножить на минус единицу
 
     if ball_rect.colliderect(paddle_1_rect) or ball_rect.colliderect(paddle_2_rect):
-        BALL_SPEED_Y += 1
-        BALL_SPEED_X += 1
+        BALL_SPEED += 1
+        if ball_rect.colliderect(paddle_1_rect):
+            BALL_SPEED_X = -BALL_SPEED
+            BALL_SPEED_Y = -BALL_SPEED
+            ball_rect.x = paddle_1_rect.right+BALL_SIZE
+        elif ball_rect.colliderect(paddle_2_rect):
+            BALL_SPEED_X = BALL_SPEED
+            BALL_SPEED_Y = -BALL_SPEED
+            ball_rect.x = paddle_2_rect.left-BALL_SIZE
         BALL_SPEED_X *= -1
+        hit_sound.play()
+        print(BALL_SPEED_X, BALL_SPEED_Y)
 
     if ball_rect.left <= 0:
         ball_rect.center = (SCR_WIDTH//2, SCR_HEIGHT//2)
-        BALL_SPEED_X = choice(directs)
-        BALL_SPEED_Y = choice(directs)
+        BALL_SPEED_X = -BALL_SPEED_X
+        BALL_SPEED_Y = -BALL_SPEED_Y
         score_2 += 1
-
+        miss_sound.play()
+        print(BALL_SPEED_X, BALL_SPEED_Y)
     elif ball_rect.left >= SCR_WIDTH:
         ball_rect.center = (SCR_WIDTH//2, SCR_HEIGHT//2)
-        BALL_SPEED_X = choice(directs)
-        BALL_SPEED_Y = choice(directs)
+        BALL_SPEED_X = -BALL_SPEED_X
+        BALL_SPEED_Y = -BALL_SPEED_Y
         score_1 += 1
+        miss_sound.play()
+        print(BALL_SPEED_X, BALL_SPEED_Y)
 
+    if BALL_SPEED == 30:
+        BALL_SPEED = 30
 
 
 
@@ -124,20 +141,24 @@ while running:
     #Основная логика
     #Отрисовка объектов
     screen.fill(BACKGROUND)
-    if score_1 >= 10:
+
+    speed_text = font.render(f'Скорость: {BALL_SPEED}', True, WHITE)
+    screen.blit(speed_text, (1000, 100))
+
+    if score_1 >= 20:
         BALL_SPEED_Y = 0
         BALL_SPEED_X = 0
         screen.fill(RED)
         win_text = font.render(f'{name_1} Победил(а)!', True, WHITE)
         screen.blit(win_text, (SCR_WIDTH // 2 - win_text.get_width() // 2, 50))
-    elif score_2 >= 10:
+    elif score_2 >= 20:
         BALL_SPEED_Y = 0
         BALL_SPEED_X = 0
         screen.fill(BLUE)
         win_text = font.render(f'{name_2} Победил(а)!', True, WHITE)
         screen.blit(win_text, (SCR_WIDTH // 2 - win_text.get_width() // 2, 50))
 
-    pygame.draw.rect(screen, RED, paddle_1_rect)
+    pygame.draw.rect(screen, GREEN, paddle_1_rect)
     pygame.draw.rect(screen, BLUE, paddle_2_rect)
     pygame.draw.ellipse(screen, WHITE, ball_rect)
 
