@@ -20,7 +20,7 @@ TEXT_COLOR = (255, 255, 255)
 # Настройки игрока
 pacman = pygame.image.load('resourse/pacman_right.png')
 circle_pos = [320, 240]
-angle = 20
+angle = 90
 speed = 4
 health = 3
 score = 0
@@ -43,6 +43,8 @@ enemy_spawn_interval = 240  # кадры между спавном врагов
 enemy_width = 50
 enemy_height = 30
 enemy_speed = 5
+heal_timer = 0
+heal_interval = 1200
 
 clock = pygame.time.Clock()
 running = True
@@ -77,7 +79,7 @@ while running:
         angle = math.degrees(math.atan2(dx, dy))
 
         dist = distance(circle_pos, mouse_pos)
-        speed = max_speed - (dist/max_dist) * (max_speed-min_speed)
+        speed = max_speed - (dist/max_dist) / (max_speed-min_speed)
 
         dx = speed * math.cos(math.radians(angle))
         dy = speed * math.sin(math.radians(angle))
@@ -90,7 +92,7 @@ while running:
         circle_pos[1] = max(0, min(size[1], circle_pos[1]))
 
         # Сбор очков
-        for point in points[:]:
+        for point in points:
             if distance(circle_pos, point) < 50:
                 points.remove(point)
                 score += 1
@@ -102,6 +104,12 @@ while running:
         if enemy_spawn_timer >= enemy_spawn_interval and random.random() < 0.05:
             enemies.append([0, circle_pos[1], enemy_width, enemy_height])
             enemy_spawn_timer = 0
+
+        heal_timer +=1
+        if heal_timer >= heal_interval:
+            health += 1
+            if health >= 3:
+                health = 3
 
         # Движение врагов
         for enemy in enemies[:]:
