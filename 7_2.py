@@ -91,7 +91,7 @@ while running:
 
         # Сбор очков
         for point in points[:]:
-            if distance(circle_pos, point) < 20:
+            if distance(circle_pos, point) < 50:
                 points.remove(point)
                 score += 1
                 # Добавляем новую точку
@@ -107,8 +107,7 @@ while running:
         for enemy in enemies[:]:
             enemy[0] += enemy_speed
             # Проверка столкновения с игроком
-            if (circle_pos[0] > enemy[0] and circle_pos[0] < enemy[0] + enemy[2] and
-                circle_pos[1] > enemy[1] and circle_pos[1] < enemy[1] + enemy[3]):
+            if distance(circle_pos, enemy) <= 100:
                 enemies.remove(enemy)
                 health -= 1
                 if health <= 0:
@@ -118,7 +117,7 @@ while running:
                 enemies.remove(enemy)
 
         # Проверка победы
-        if score >= 15:
+        if score >= 10:
             win = True
 
     # Отрисовка
