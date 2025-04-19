@@ -1,3 +1,6 @@
+import time
+from time import *
+
 
 
 
@@ -31,6 +34,21 @@ def load_points():
 
 import pygame
 pygame.init()
+
+def instruction():
+    print('''Краткая инструкция по использованию: 
+1. Клавиша с предназначена для полного стирания всех линий с экрана. 
+2. Клавиша l предназначена для загрузки последнего сохранения линий(если оно имеется).
+3. Клавиша s предназначена для сохранения линий.
+4. Клавиша e предназначена для выхода из редактора.
+5. Для создания первой точки линии кликните по экрану. Появится
+серая линия предпросмотра для обозначения направления основной линии 
+6. Для удаления точки нажмите правую кнопку мыши, 
+наведясь на эту точку(подсвечена красным)''')
+
+
+
+
 size = (1280, 720)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Рисование")
@@ -50,6 +68,7 @@ points = []
 
 FPS = 60
 clock = pygame.time.Clock()
+instruction()
 
 running = True
 while running:
@@ -79,13 +98,14 @@ while running:
         elif keys[pygame.K_l]:
             load_points()
         elif keys[pygame.K_e]:
-            exit()
+            exit('Вы вышли из программы')
 
 
 
     # Основная логика
     # Отрисовка объектов
     screen.fill(BACKGROUND)
+
 
     for i in range(len(points) - 1):
         pygame.draw.line(screen, LINE_COLOR, points[i], points[i+1], 3)
