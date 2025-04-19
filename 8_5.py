@@ -78,6 +78,8 @@ while running:
             save_points()
         elif keys[pygame.K_l]:
             load_points()
+        elif keys[pygame.K_e]:
+            exit()
 
 
 
