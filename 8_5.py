@@ -1,14 +1,31 @@
 
+
+
 def get_closest_point(mouse_pos):
     closest_point = None
     closest_distance = float('inf')
     for point in points:
         distance = ((point[0] - mouse_pos[0]) ** 2 + (point[1] - mouse_pos[1]) ** 2)**0.5
-        if distance <= POINT_RADIUS and distance < closest_distance:
+        if distance <= POINT_RADIUS**2 and distance < closest_distance:
             closest_point = point
             closest_distance = distance
-    if closest_point is not None:
-        return closest_point
+            break
+    return closest_point
+
+def save_points():
+    with open(POINTS_FILE_NAME, 'w') as f:
+        for point in points:
+            f.write(f'{point[0]} {point[1]}\n')
+
+def load_points():
+    points.clear()
+    try:
+        with open(POINTS_FILE_NAME, 'r') as f:
+            for line in f:
+                x,y = map(int, line.split())
+                points.append((x, y))
+    except FileNotFoundError:
+        pass
 
 
 
@@ -25,11 +42,15 @@ PREVIEW_COLOR = (192, 192, 192)
 REMOVE_RADIUS = 5
 POINT_RADIUS = REMOVE_RADIUS
 HILIGHT_COLOR = (255, 0, 0)
+POINTS_FILE_NAME = 'points.txt'
 
 points = []
 
+
+
 FPS = 60
 clock = pygame.time.Clock()
+
 running = True
 while running:
     mouse_pos = pygame.mouse.get_pos()
@@ -45,9 +66,19 @@ while running:
                     points.append(event.pos)
                     print(points)
                 elif event.button == 3:
-                    points.remove(event.pos)
+                    points.remove(closest_point)
             elif event.button == 1:
                 points.append(mouse_pos)
+
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_c]:
+            points = []
+        elif keys[pygame.K_s]:
+            save_points()
+        elif keys[pygame.K_l]:
+            load_points()
+
 
 
     # Основная логика
@@ -60,12 +91,13 @@ while running:
     if len(points) > 0:
         pygame.draw.aaline(screen, PREVIEW_COLOR, points[-1], mouse_pos)
 
-    if closest_point:
+    pos = pygame.mouse.get_pos()
+    closest_point = get_closest_point(pos)
+    if closest_point is not None:
         pygame.draw.circle(screen, HILIGHT_COLOR, closest_point, POINT_RADIUS)
 
-    pos = pygame.mouse.get_pos()
-    get_closest_point(pos)
 
     pygame.display.flip()
     clock.tick(FPS)
+
 pygame.quit()
