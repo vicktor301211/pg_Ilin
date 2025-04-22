@@ -23,7 +23,7 @@ bg_color = (255, 255, 255)
 brush_color = COLORS[5]
 brush_width = 5
 
-
+figure = 'квадрат'
 
 CUR_FIGURE_IX = 0
 
@@ -67,7 +67,7 @@ while running:
 
             elif event.key == pygame.K_c:
                 canvas.fill(WHITE)
-            #Добавить функционала для редактора(переключение фигур на стрелки или типа того)
+
 
             elif event.key == pygame.K_RIGHT:
                 CUR_FIGURE_IX += 1
@@ -83,13 +83,12 @@ while running:
 
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 3 and CUR_FIGURE_IX == 0: # переделать под изменившийся функционал
+            if event.button == 3 and CUR_FIGURE_IX == 0:
                 pygame.draw.rect(canvas, brush_color, (event.pos[0], event.pos[1], square_size, square_size))
             elif event.button == 3 and CUR_FIGURE_IX == 1:
                 pygame.draw.rect(canvas, brush_color, (event.pos[0], event.pos[1], square_size, square_size), border_radius=50)
 
 
-            #Вывод состояния редактора на экран
 
 
 
@@ -108,16 +107,23 @@ while running:
     elif pressed[1]:
         pygame.draw.rect(canvas, brush_color, (mouse_pos[0], mouse_pos[1], 100, 100))
 
+    if CUR_FIGURE_IX == 0:
+        figure = 'квадрат'
+    elif CUR_FIGURE_IX == 1:
+        figure = 'круг'
+
 
     # Основная логика
     # Отрисовка объектов
 
     brush_size_text = font.render(f'Размер кисти: {brush_width}', True, BLACK)
     figure_size_text = font.render(f'Размер фигуры: {square_size} (для отрисовки нажмите на ПКМ)', True, BLACK)
+    figure_text = font.render(f'Фигура: {figure}', True, BLACK)
 
     screen.blit(canvas, (0, 0))
     screen.blit(brush_size_text, (10, 70))
-    screen.blit(figure_size_text,(300, 70))
+    screen.blit(figure_size_text,(350, 70))
+    screen.blit(figure_text, (170, 70))
     create_palett()
     pygame.display.flip()
     clock.tick(FPS)
