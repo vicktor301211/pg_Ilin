@@ -66,6 +66,11 @@ while running:
 
             elif event.key == pygame.K_c:
                 canvas.fill(WHITE)
+                rects = []
+                rect_size = (0,0)
+
+            elif event.key == pygame.K_z:
+                brush_width = 5
 
             elif event.key == pygame.K_SPACE:
                 filling = not filling
