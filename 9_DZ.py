@@ -1,7 +1,7 @@
 from all_colors import *
 
 
-def create_palett():
+def create_palett():            #Функция для создания палитры
     palette.fill(bg_color)
     for i in range(12):
         color_rect = pygame.Rect(i * size, 0, size, size)
@@ -11,7 +11,7 @@ def create_palett():
     pygame.draw.rect(palette, BORDER_COLOR, border_rect, width=3)
     screen.blit(palette, palette_rect.topleft)
 
-
+#Дальше мне лень писать комментарии
 
 import pygame
 
@@ -63,7 +63,6 @@ while running:
                 if brush_width <= 1:
                     brush_width = 1
 
-
             elif event.key == pygame.K_c:
                 canvas.fill(WHITE)
                 rects = []
@@ -74,10 +73,6 @@ while running:
 
             elif event.key == pygame.K_SPACE:
                 filling = not filling
-
-
-
-
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 3:
@@ -99,26 +94,10 @@ while running:
                 color = brush_color
                 rects.append((rect, color))
 
-
-
         if filling == False:
             contur = 1
         elif filling == True:
             contur = 0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     mouse_pos = pygame.mouse.get_pos()
     pressed = pygame.mouse.get_pressed()
