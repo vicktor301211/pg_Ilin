@@ -62,17 +62,30 @@ while running:
                 brush_width -= 1
                 if brush_width <= 1:
                     brush_width = 1
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
             elif event.key == pygame.K_c:
                 canvas.fill(WHITE)
                 rects = []
                 rect_size = (0,0)
 
+<<<<<<< Updated upstream
             elif event.key == pygame.K_z:
                 brush_width = 5
 
             elif event.key == pygame.K_SPACE:
                 filling = not filling
+=======
+            elif event.key == pygame.K_SPACE:
+                filling = not filling
+
+
+
+
+>>>>>>> Stashed changes
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 3:
@@ -80,6 +93,40 @@ while running:
                 rect_size = 0,0
                 dragging = True
                 filling = False
+<<<<<<< Updated upstream
+=======
+
+        elif event.type == pygame.MOUSEMOTION and dragging:
+            right_bottom = event.pos
+            rect_size = (right_bottom[0] - top_left[0], right_bottom[1] - top_left[1])
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 3:
+                right_bottom = event.pos
+                rect_size = (right_bottom[0] - top_left[0], right_bottom[1] - top_left[1])
+                dragging = False
+                rect = pygame.Rect(top_left, rect_size)
+                color = brush_color
+                rects.append((rect, color))
+
+
+
+        if filling == False:
+            contur = 1
+        elif filling == True:
+            contur = 0
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> Stashed changes
 
         elif event.type == pygame.MOUSEMOTION and dragging:
             right_bottom = event.pos
