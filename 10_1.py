@@ -1,8 +1,32 @@
+
 import pygame
 import random
 import os
+from tkinter import *
 
+def draw_difficulty():
+    font = pygame.font.SysFont('Arial', 32)
+    text = font.render(f'Сложность: {difficulty}', True, (255, 255, 255))
+    text_rect = text.get_rect()
+    text_rect.center = (800, 250)
+    pygame.draw.rect(screen, (0, 0, 0), text_rect.inflate(4, 4))
+    screen.blit(text, text_rect)
 
+def draw_rows_cols():
+    font = pygame.font.SysFont('Arial', 32)
+    text = font.render(f'Размер: {ROWS}x{COLS}', True, (255, 255, 255))
+    text_rect = text.get_rect()
+    text_rect.center = (800, 150)
+    pygame.draw.rect(screen, (0, 0, 0), text_rect.inflate(4, 4))
+    screen.blit(text, text_rect)
+
+def draw_timer():
+    font = pygame.font.SysFont('Arial', 32)
+    text = font.render(f'Время: {timer//60}', True, (255, 255, 255))
+    text_rect = text.get_rect()
+    text_rect.center = (800, 50)
+    pygame.draw.rect(screen, (0, 0, 0), text_rect.inflate(4, 4))
+    screen.blit(text, text_rect)
 
 def draw_swaps():
     font = pygame.font.SysFont('Arial', 32)
@@ -46,14 +70,34 @@ def is_puzzle_solved():
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 800
-ROWS = int(input())
+difficulty = int(input("Введите сложность от 1 до 3: "))
+if difficulty > 3:
+    difficulty = 3
+elif difficulty < 1:
+    difficulty = 1
+ROWS = difficulty * 3
 COLS = ROWS
 MARGIN = 2
+
+timer = 0
+
+def u_t():
+    global timer
+    timer += 1
+    canv.after(1000, u_t)
+def timer_stop():
+    canv.after(10000000, u_t)
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Пазлы")
 clock = pygame.time.Clock()
+
+
+w = Tk()
+w.title('Танки на минималках 2.0')
+canv = Canvas(w, width=0, height=0, bg = 'white')
+
 
 pictures = os.listdir('pictures')
 picture = random.choice(pictures)
@@ -114,9 +158,16 @@ while running:
     screen.fill((0, 0, 0))
     draw_tiles()
     draw_swaps()
+    draw_timer()
+    draw_rows_cols()
+    draw_difficulty()
+
 
     if game_completed:
         game_over()
-
+        timer_stop()
+    if game_completed == False:
+        u_t()
     pygame.display.flip()
     clock.tick(60)
+
