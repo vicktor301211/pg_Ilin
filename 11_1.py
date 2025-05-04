@@ -4,6 +4,8 @@ import abc
 import random
 import os
 
+from pygame.constants import K_BACKSPACE
+
 difficulty = int(input("Введите сложность от 1 до 3: "))
 
 
@@ -165,6 +167,7 @@ class GameScreen(State):
         self.swaps = 0
         self.selected = None
         self.game_completed = False
+        self.SAVE_FILE_NAME = 'statistic.txt'
 
         # Загрузка изображения
         pictures = os.listdir('pictures')
@@ -181,7 +184,7 @@ class GameScreen(State):
         # Кнопка возврата в меню
         self.back_text = self.info_font.render('Назад в меню', True, (255, 255, 255))
         self.back_rect = self.back_text.get_rect()
-        self.back_rect.topleft = (20, 20)
+        self.back_rect.topleft = (800, 20)
 
     def init_puzzle(self):
         image_width, image_height = self.image.get_size()
@@ -213,6 +216,7 @@ class GameScreen(State):
     def handle_events(self, events):
         for event in events:
             if event.type == pygame.QUIT:
+                self.save()
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not self.game_completed:
@@ -235,6 +239,8 @@ class GameScreen(State):
                             self.selected = None
                         else:
                             self.selected = i
+            elif event.type == pygame.KEYDOWN and event.key == K_BACKSPACE:
+                return MenuScreen()
         return self
 
     def update(self):
@@ -258,13 +264,17 @@ class GameScreen(State):
         if self.game_completed:
             self.draw_game_over(screen)
 
+    def save(self):
+        with open(self.SAVE_FILE_NAME, 'w') as f:
+            f.write(f'{player_name}, {self.timer//60}, {self.swaps}, {self.difficulty}')
+
     def draw_tiles(self, screen):
         for i in range(len(self.tiles)):
             tile = self.tiles[i]
             row = i // self.ROWS
             col = i % self.COLS
-            x = col * (self.TILE_WIDTH + self.MARGIN) + self.MARGIN + 200  # Сдвигаем вправо
-            y = row * (self.TILE_HEIGHT + self.MARGIN) + self.MARGIN + 100  # Сдвигаем вниз
+            x = col * (self.TILE_WIDTH + self.MARGIN)
+            y = row * (self.TILE_HEIGHT + self.MARGIN)
             if i == self.selected:
                 pygame.draw.rect(screen, (0, 255, 0),
                                  (x - self.MARGIN, y - self.MARGIN,
@@ -275,23 +285,23 @@ class GameScreen(State):
     def draw_info(self, screen):
         # Имя игрока
         name_text = self.info_font.render(f'Игрок: {player_name}', True, (255, 255, 255))
-        screen.blit(name_text, (20, 60))
+        screen.blit(name_text, (800, 60))
 
         # Сложность
         diff_text = self.info_font.render(f'Сложность: {self.difficulty}', True, (255, 255, 255))
-        screen.blit(diff_text, (20, 100))
+        screen.blit(diff_text, (800, 100))
 
         # Размер
         size_text = self.info_font.render(f'Размер: {self.ROWS}x{self.COLS}', True, (255, 255, 255))
-        screen.blit(size_text, (20, 140))
+        screen.blit(size_text, (800, 140))
 
         # Таймер
         time_text = self.info_font.render(f'Время: {self.timer // 60}', True, (255, 255, 255))
-        screen.blit(time_text, (20, 180))
+        screen.blit(time_text, (800, 180))
 
         # Перемещения
         swaps_text = self.info_font.render(f'Ходов: {self.swaps}', True, (255, 255, 255))
-        screen.blit(swaps_text, (20, 220))
+        screen.blit(swaps_text, (800, 220))
 
     def draw_game_over(self, screen):
         text = self.game_over_font.render('Пазл собран!', True, (255, 255, 255))
@@ -331,6 +341,7 @@ while running:
     state = state.handle_events(events)
     state.update()
     state.draw(screen)
+
 
     pygame.display.flip()
     clock.tick(FPS)
