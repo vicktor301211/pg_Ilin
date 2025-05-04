@@ -204,37 +204,37 @@ class GameScreen(State):
             if self.tiles != self.origin_tiles:
                 break
 
+    def is_puzzle_solved(self):
+        for i in range(len(self.tiles)):
+            if self.tiles[i] != self.origin_tiles[i]:
+                return False
+        return True
+
     def handle_events(self, events):
         for event in events:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not self.game_completed:
                 mouse_x, mouse_y = pygame.mouse.get_pos()
+                for i in range(len(self.tiles)):
+                    row = i // self.ROWS
+                    col = i % self.COLS
+                    x = col * (self.TILE_WIDTH + self.MARGIN) + self.MARGIN
+                    y = row * (self.TILE_HEIGHT + self.MARGIN) + self.MARGIN
 
-                # Проверка нажатия на кнопку "Назад"
-                if self.back_rect.collidepoint(mouse_x, mouse_y):
-                    return MenuScreen()
-
-                # Обработка кликов по пазлу, если игра не завершена
-                if not self.game_completed:
-                    for i in range(len(self.tiles)):
-                        row = i // self.ROWS
-                        col = i % self.COLS
-                        x = col * (self.TILE_WIDTH + self.MARGIN) + self.MARGIN
-                        y = row * (self.TILE_HEIGHT + self.MARGIN) + self.MARGIN
-
-                        if x <= mouse_x <= x + self.TILE_WIDTH and y <= mouse_y <= y + self.TILE_HEIGHT:
-                            if self.selected is not None and self.selected != i:
-                                self.tiles[i], self.tiles[self.selected] = self.tiles[self.selected], self.tiles[i]
-                                self.selected = None
-                                self.swaps += 1
-                                if self.is_puzzle_solved():
-                                    self.game_completed = True
-                            elif self.selected == i:
-                                self.selected = None
-                            else:
-                                self.selected = i
+                    if x <= mouse_x <= x + self.TILE_WIDTH and y <= mouse_y <= y + self.TILE_HEIGHT:
+                        if self.selected is not None and self.selected != i:
+                            self.tiles[i], self.tiles[self.selected] = self.tiles[self.selected], self.tiles[i]
+                            self.selected = None
+                            self.swaps += 1
+                            # Проверяем, собран ли пазл после каждого хода
+                            if self.is_puzzle_solved():
+                                self.game_completed = True
+                        elif self.selected == i:
+                            self.selected = None
+                        else:
+                            self.selected = i
         return self
 
     def update(self):
@@ -300,11 +300,7 @@ class GameScreen(State):
         pygame.draw.rect(screen, (0, 0, 0), text_rect.inflate(20, 20))
         screen.blit(text, text_rect)
 
-    def is_puzzle_solved(self):
-        for i in range(len(self.tiles)):
-            if self.tiles[i] != self.origin_tiles[i]:
-                return False
-        return True
+
 
 
 # Инициализация pygame
