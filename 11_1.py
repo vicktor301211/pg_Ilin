@@ -5,8 +5,14 @@ import random
 import os
 
 from pygame.constants import K_BACKSPACE
+import pygame.mixer
+pygame.mixer.init()
 
 difficulty = int(input("Введите сложность от 1 до 3: "))
+
+pygame.mixer.music.load('resourse/light_music.mp3')
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(0.3)
 
 
 class State(abc.ABC):
@@ -25,12 +31,12 @@ class State(abc.ABC):
 
 class SplashScreen(State):
     def __init__(self):
-        self.text = 'Заставка'
-        self.surface = font.render(self.text, True, (255, 255, 255))
+
+        self.background_image = pygame.image.load('resourse/zastavka.png')
 
         self.hint_visible = True
         self.hint = 'Нажмите [LMB] для продолжения'
-        self.hint_surface = font.render(self.hint, True, (255, 255, 255))
+        self.hint_surface = font.render(self.hint, True, (0, 0, 0))
 
         self.hint_time = pygame.time.get_ticks()
 
@@ -50,11 +56,9 @@ class SplashScreen(State):
             self.hint_time = current_time
 
     def draw(self, screen):
-        screen.fill(BACKGROUND)
-        rect = self.surface.get_rect()
-        rect.centerx = screen.get_rect().centerx
-        rect.centery = screen.get_rect().centery - 100
-        screen.blit(self.surface, rect)
+        screen.fill((255, 255, 255))
+
+        screen.blit(self.background_image, [0, 0])
         if self.hint_visible:
             hint_rect = self.hint_surface.get_rect()
 
@@ -66,8 +70,9 @@ class SplashScreen(State):
 
 class MenuScreen(State):
     def __init__(self):
+        self.background_image = pygame.image.load('resourse/zastavka.png')
         self.items = ['Играть', 'Выбрать имя игрока', 'Выйти']
-        self.surfaces = [font.render(item, True, (255, 255, 255)) for item in self.items]
+        self.surfaces = [font.render(item, True, (0, 0, 0)) for item in self.items]
         self.selected = 0
 
     def handle_events(self, events):
@@ -88,14 +93,16 @@ class MenuScreen(State):
         pass
 
     def draw(self, screen):
-        screen.fill(BACKGROUND)
+        screen.fill((255, 255, 255))
+        screen.blit(self.background_image, [0, 0])
         for i, surface in enumerate(self.surfaces):
             rect = surface.get_rect()
             rect.centerx = screen.get_rect().centerx
-            rect.top = screen.get_rect().top + 100 * (i + 1)
+            rect.top = screen.get_rect().top + 150 * (i + 1)
             if i == self.selected:
                 surface = font.render(self.items[i], True, (255, 0, 0))
             screen.blit(surface, rect)
+
 
     def next(self):
         if self.selected < len(self.items) - 1:
@@ -117,8 +124,9 @@ class MenuScreen(State):
 
 class NameScreen(State):
     def __init__(self):
+        self.background_image = pygame.image.load('resourse/zastavka.png')
         self.text = 'Введите имя игрока'
-        self.surface = font.render(self.text, True, (255, 255, 255))
+        self.surface = font.render(self.text, True, BACKGROUND)
         self.name = ''
         self.name_surface = None
 
@@ -131,6 +139,7 @@ class NameScreen(State):
                 if event.key == pygame.K_BACKSPACE:
                     if len(self.name) > 0:
                         self.name = self.name[:-1]
+                        self.name_surface = font.render(self.name, True, (0, 0, 0))
                 elif event.key == pygame.K_RETURN:
                     global player_name
                     player_name = self.name
@@ -138,28 +147,29 @@ class NameScreen(State):
                 else:
                     if event.unicode.isalnum() and len(self.name) < 10:
                         self.name += event.unicode
-                        self.name_surface = font.render(self.name, True, (255, 255, 255))
+                        self.name_surface = font.render(self.name, True, BACKGROUND)
         return self
 
     def update(self):
         pass
 
     def draw(self, screen):
-        screen.fill(BACKGROUND)
+        screen.fill((255, 255, 255))
+        screen.blit(self.background_image, [0, 0])
         rect = self.surface.get_rect()
         rect.centerx = screen.get_rect().centerx
-        rect.top = screen.get_rect().top + 100
+        rect.top = screen.get_rect().top + 150
         screen.blit(self.surface, rect)
         if self.name_surface is not None:
             name_rect = self.name_surface.get_rect()
             name_rect.centerx = screen.get_rect().centerx
-            name_rect.top = screen.get_rect().top + 200
+            name_rect.top = screen.get_rect().top + 250
             screen.blit(self.name_surface, name_rect)
 
 
 class GameScreen(State):
     def __init__(self):
-        self.difficulty = difficulty  # Средняя сложность по умолчанию
+        self.difficulty = difficulty
         self.ROWS = self.difficulty * 3
         self.COLS = self.ROWS
         self.MARGIN = 2
@@ -182,7 +192,7 @@ class GameScreen(State):
         self.game_over_font = pygame.font.SysFont('Arial', 64)
 
         # Кнопка возврата в меню
-        self.back_text = self.info_font.render('Назад в меню', True, (255, 255, 255))
+        self.back_text = self.info_font.render('Назад в меню - [Backspace]', True, (255, 255, 255))
         self.back_rect = self.back_text.get_rect()
         self.back_rect.topleft = (800, 20)
 
@@ -240,6 +250,7 @@ class GameScreen(State):
                         else:
                             self.selected = i
             elif event.type == pygame.KEYDOWN and event.key == K_BACKSPACE:
+                self.save()
                 return MenuScreen()
         return self
 
@@ -248,7 +259,7 @@ class GameScreen(State):
             self.timer += 1
 
     def draw(self, screen):
-        screen.fill(BACKGROUND)
+        screen.fill((50, 80, 65))
 
         # Рисуем кнопку "Назад"
         pygame.draw.rect(screen, (50, 50, 50), self.back_rect.inflate(10, 10))
@@ -316,7 +327,7 @@ class GameScreen(State):
 # Инициализация pygame
 pygame.init()
 pygame.font.init()
-size = (1280, 720)
+size = (1280, 800)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Пазлы")
 BACKGROUND = (0, 0, 0)
@@ -337,6 +348,7 @@ while running:
     for event in events:
         if event.type == pygame.QUIT:
             running = False
+
 
     state = state.handle_events(events)
     state.update()
